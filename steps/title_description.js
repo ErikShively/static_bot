@@ -10,7 +10,7 @@ async function title_description(interaction_object){
         interaction_object.title = (submitted.fields.getTextInputValue(modal_object.title_id));
         interaction_object.description = (submitted.fields.getTextInputValue(modal_object.description_id));
         try{
-            interaction_object.components[0].components[4].setStyle(ButtonStyle.Success);
+            interaction_object.components[1].components[4].setStyle(ButtonStyle.Success);
             interaction_object.message.edit({components: interaction_object.components});
             await submitted.update({content:"Title and description set!", ephemeral:true});
         } catch(error){

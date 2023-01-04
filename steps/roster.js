@@ -63,7 +63,9 @@ async function roster(interaction_object){
             } else if(j.customId === class_select_id){
                 if(selection === "REMOVE"){
                     class_options_list.splice(idx,1); 
-                    class_options_list.forEach((element,index)=>{if(element.value != "ADD") {element.value=index.toString()}});
+                    class_options_list.forEach((element,index)=>{if(element.value != "ADD") {
+                        element.value = index.toString();
+                    }});
                     rows[0].components[0].setOptions(class_options_list)
                     .setPlaceholder("Role Removed");
                     rows[1].components[0].setPlaceholder("No Roles Selected");
@@ -87,7 +89,7 @@ async function roster(interaction_object){
             return_list.forEach(element=>{list_string = list_string + class_list_key.get(element).emote});
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id) {
-            interaction_object.components[0].components[2].setStyle(ButtonStyle.Success);
+            interaction_object.components[1].components[2].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components});
             await interaction_object.interaction.deleteReply();
         }

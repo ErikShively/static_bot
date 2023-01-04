@@ -45,7 +45,7 @@ async function roles(interaction_object){
             if(j.customId===index_select_id) {
                 if(selection === "ADD"){
                     idx = roles_options_list.length;
-                    let new_entry = {label: "___", description: "An unset role", value: idx.toString(), return: "UNST", emote:"<:black_square_button:1058924242630103150>"};
+                    let new_entry = {label:"___", description: "An unset role", value: idx.toString(), return: "UNST", emote:"<:black_square_button:1058924242630103150>"};
                     roles_options_list.push(new_entry);
                     rows[0].components[0].setOptions(roles_options_list)
                     .setPlaceholder("Role Added");
@@ -63,7 +63,9 @@ async function roles(interaction_object){
             } else if(j.customId === role_select_id){
                 if(selection === "REMOVE"){
                     roles_options_list.splice(idx,1); 
-                    roles_options_list.forEach((element,index)=>{if(element.value != "ADD") {element.value=index.toString()}});
+                    roles_options_list.forEach((element,index)=>{if(element.value != "ADD") {
+                        element.value=index.toString();
+                    }});
                     rows[0].components[0].setOptions(roles_options_list)
                     .setPlaceholder("Role Removed");
                     rows[1].components[0].setPlaceholder("No Roles Selected");
@@ -88,7 +90,7 @@ async function roles(interaction_object){
 
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id){
-            interaction_object.components[0].components[1].setStyle(ButtonStyle.Success);
+            interaction_object.components[1].components[1].setStyle(ButtonStyle.Success);
             interaction_object.roles = return_list;
             await interaction_object.message.edit({components: interaction_object.components}); //To be called when the list is actually submitted
             await interaction_object.interaction.deleteReply();

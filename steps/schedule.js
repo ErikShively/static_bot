@@ -87,8 +87,8 @@ async function schedule(interaction_object){
         } else if(j.customId===done_id) {
             // Check again here for valid lines because of the time zone change
             rows.forEach(row=>{row.components.forEach(component=>component.setDisabled(true))});
-            interaction_object.components[0].components[0].setDisabled(false);
-            interaction_object.components[0].components[0].setStyle(ButtonStyle.Success);
+            interaction_object.components[1].components[0].setDisabled(false);
+            interaction_object.components[1].components[0].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components}); //May need to remove await
             await interaction_object.interaction.deleteReply();
     };

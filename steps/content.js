@@ -38,7 +38,7 @@ async function content(interaction_object){
             rows[0].components[0].setPlaceholder(selection);
             interaction_object.content = selection;
             await j.update({components: rows});
-            interaction_object.components[0].components[3].setStyle(ButtonStyle.Success);
+            interaction_object.components[1].components[3].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components});
             await interaction_object.interaction.deleteReply();
         }

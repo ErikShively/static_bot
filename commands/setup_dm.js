@@ -14,6 +14,16 @@ module.exports = {
       const ending_timeout = 1000 * 10;
         let buttons = [];
         let rows = [];
+        let ids = [];
+        let lf_select_id = "lf_select" + timestamp + interaction.user.id;
+        let done_btn_id = "lf_setup_done" + timestamp + interaction.user.id;
+        rows.push(new ActionRowBuilder().addComponents(new SelectMenuBuilder()
+        .setPlaceholder("Looking For Group or Members")
+        .setCustomId(lf_select_id)
+        .addOptions([
+            {label: "LFG", description: "Looking for a group", value: "LFG"},
+            {label: "LFM", description: "Looking for a members", value: "LFM"},
+        ])))
         let steps = [
             {style:ButtonStyle.Primary,id:"schedule" + timestamp + interaction.user.id,label:"Schedule",reply:""},
             {style:ButtonStyle.Primary,id:"roles" + timestamp + interaction.user.id,label:"Roles",reply:""},
@@ -23,36 +33,53 @@ module.exports = {
         ];
         steps.forEach(currentValue=>{
             buttons.push(new ButtonBuilder().setCustomId(currentValue.id).setLabel(currentValue.label).setStyle(currentValue.style));
+            ids.push(currentValue.id);
         });
         rows.push(new ActionRowBuilder().addComponents(buttons.slice(0,5)));
+        rows.push(new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel("Done").setCustomId(done_btn_id).setStyle(ButtonStyle.Success)));
       let dm = await interaction.user.send({content:"Get started by selecting a button", components: rows});
       filter=i=>{i.deferUpdate(); return true};
       const collector = dm.channel.createMessageComponentCollector({time: timeout}); //Consider adding idle arg
       collector.on('collect',async i =>{
           let interaction_object = {interaction: i, collector: collector, message: dm, components: rows, timeout: timeout};
-          try{
-              switch(i.customId){
-                  case steps[0].id:
-                      schedule_step.schedule(interaction_object);
-                      break;
-                  case steps[1].id:
-                      roles_step.roles(interaction_object);
-                      break;
-                  case steps[2].id:
-                      roster_step.roster(interaction_object);
-                      break;
-                  case steps[3].id:
-                      content_step.content(interaction_object);
-                      break;
-                  case steps[4].id:
-                      title_description_step.title_description(interaction_object);
-                      break;
-                  default:
-                      break;
-              }
-          } catch (error) {
-              await i.update({content: "An error has occurred. Please retry your command.", components:rows, ephemeral: true})
-              collector.stop();
+          if(ids.includes(i.customId)){
+            try{
+                switch(i.customId){
+                    case steps[0].id:
+                        schedule_step.schedule(interaction_object);
+                        break;
+                    case steps[1].id:
+                        roles_step.roles(interaction_object);
+                        break;
+                    case steps[2].id:
+                        roster_step.roster(interaction_object);
+                        break;
+                    case steps[3].id:
+                        content_step.content(interaction_object);
+                        break;
+                    case steps[4].id:
+                        title_description_step.title_description(interaction_object);
+                        break;
+                    default:
+                        break;
+                }
+            } catch (error) {
+                await i.update({content: "An error has occurred. Please retry your command.", components:rows, ephemeral: true})
+                collector.stop();
+            }
+          } else if(i.customId === lf_select_id){
+            let selection = i.values[0];
+            if(selection ==="LFG"){
+                rows[1].components[1].setDisabled(true);
+            } else {
+                rows[1].components[1].setDisabled(false);
+            }
+            rows[0].components[0].setPlaceholder(selection);
+            i.update({components: rows});
+          } else if(i.customId === done_btn_id){
+            rows.forEach(row=>{row.components.forEach(component=>component.setDisabled(true))});
+            i.update({components: rows});
+            collector.stop();
           }
       });
       collector.on('end', async j=>{
@@ -62,6 +89,6 @@ module.exports = {
             dm.delete();
           }, ending_timeout);
       });
-      await interaction.reply({content: "Check your DMs for further instructions. <:WorryU:1058982837732245554>", ephemeral: true});
+      await interaction.reply({content: "Check your DMs for further instructions.", ephemeral: true});
     }
 };
