@@ -1,2 +1,2 @@
-# discord_bot
-My current project. Messing around with discordjs and poking around the docs. Will form the bot into something once I settle on an idea and get comfortable with the stack.
+# Static Bot
+My current project. Making a bot in DiscordJS to help with static recruitment for FF14. A lot of recruitment is done via Discord, so I wanted to write something that would help with the process.
