@@ -36,7 +36,7 @@ async function content(interaction_object){
         if(j.customId===select_id) {
             selection = j.values[0];
             rows[0].components[0].setPlaceholder(selection);
-            interaction_object.content = selection;
+            interaction_object.return_object.content = selection;
             await j.update({components: rows});
             interaction_object.components[1].components[3].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components});

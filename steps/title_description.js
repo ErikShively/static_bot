@@ -7,8 +7,8 @@ async function title_description(interaction_object){
     const submitted = await interaction_object.interaction.awaitModalSubmit({time:timeout});
     if(submitted && (submitted.customId === modal_object.modal_id)){
         console.log("Title description modal submitted");
-        interaction_object.title = (submitted.fields.getTextInputValue(modal_object.title_id));
-        interaction_object.description = (submitted.fields.getTextInputValue(modal_object.description_id));
+        interaction_object.return_object.title = (submitted.fields.getTextInputValue(modal_object.title_id));
+        interaction_object.return_object.description = (submitted.fields.getTextInputValue(modal_object.description_id));
         try{
             interaction_object.components[1].components[4].setStyle(ButtonStyle.Success);
             interaction_object.message.edit({components: interaction_object.components});
@@ -17,7 +17,6 @@ async function title_description(interaction_object){
             console.log(error);
         }
     }
-    // interaction_object.interaction.reply({content: "Title/Description"});
 }
 module.exports={
     title_description

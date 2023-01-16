@@ -1,5 +1,6 @@
 const {SlashCommandBuilder, ActionRow, ComponentType} = require('discord.js');
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SelectMenuBuilder} = require('discord.js');
+const mongoose = require('mongoose');
 const schedule_step = require('..//steps//schedule.js')
 const roles_step = require('..//steps//roles.js')
 const roster_step = require('..//steps//roster.js')
@@ -41,7 +42,9 @@ module.exports = {
       filter=i=>{i.deferUpdate(); return true};
       const collector = dm.channel.createMessageComponentCollector({time: timeout}); //Consider adding idle arg
       collector.on('collect',async i =>{
-          let interaction_object = {interaction: i, collector: collector, message: dm, components: rows, timeout: timeout};
+          let interaction_object = {interaction: i, collector: collector, message: dm, components: rows, timeout: timeout, return_object: {
+            schedule: null, roles: null, roster: null, content: null, title: null, description: null
+          }};
           if(ids.includes(i.customId)){
             try{
                 switch(i.customId){

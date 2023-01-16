@@ -90,6 +90,7 @@ async function roster(interaction_object){
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id) {
             interaction_object.components[1].components[2].setStyle(ButtonStyle.Success);
+            interaction_object.return_object.roles = return_list;
             await interaction_object.message.edit({components: interaction_object.components});
             await interaction_object.interaction.deleteReply();
         }

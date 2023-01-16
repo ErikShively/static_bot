@@ -2,6 +2,7 @@ const { Client, Collection, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
+const mongoose = require('mongoose');
 const { Sequelize } = require('sequelize');
 
 // Create a new client instance
@@ -16,6 +17,10 @@ for (const file of commandFiles){
     const command = require(filePath);
     client.commands.set(command.data.name, command);
 }
+
+async function mongoose_connect(){
+    await mongoose.connect("");
+};
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
