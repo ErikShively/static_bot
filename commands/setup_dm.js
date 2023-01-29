@@ -1,6 +1,7 @@
 const {SlashCommandBuilder, ActionRow, ComponentType} = require('discord.js');
 const {ActionRowBuilder, ButtonBuilder, ButtonStyle, SelectMenuBuilder} = require('discord.js');
 const mongoose = require('mongoose');
+const db_util = require('..//util//db_util')
 const schedule_step = require('..//steps//schedule.js')
 const roles_step = require('..//steps//roles.js')
 const roster_step = require('..//steps//roster.js')
@@ -18,6 +19,7 @@ module.exports = {
         let ids = [];
         let lf_select_id = "lf_select" + timestamp + interaction.user.id;
         let done_btn_id = "lf_setup_done" + timestamp + interaction.user.id;
+        let return_object = {schedule: null, roles: null, roster: null, content: null, title: null, description: null}
         rows.push(new ActionRowBuilder().addComponents(new SelectMenuBuilder()
         .setPlaceholder("Looking For Group or Members")
         .setCustomId(lf_select_id)
@@ -26,7 +28,7 @@ module.exports = {
             {label: "LFM", description: "Looking for a members", value: "LFM"},
         ])))
         let steps = [
-            {style:ButtonStyle.Primary,id:"schedule" + timestamp + interaction.user.id,label:"Schedule",reply:""},
+            {style:ButtonStyle.Primary,id:"schedule" + timestamp + interaction.user.id,label:"Set Schedule",reply:""},
             {style:ButtonStyle.Primary,id:"roles" + timestamp + interaction.user.id,label:"Roles",reply:""},
             {style:ButtonStyle.Primary,id:"roster" + timestamp + interaction.user.id,label:"Roster",reply:""},
             {style:ButtonStyle.Primary,id:"content" + timestamp + interaction.user.id,label:"Content",reply:""},
@@ -42,9 +44,7 @@ module.exports = {
       filter=i=>{i.deferUpdate(); return true};
       const collector = dm.channel.createMessageComponentCollector({time: timeout}); //Consider adding idle arg
       collector.on('collect',async i =>{
-          let interaction_object = {interaction: i, collector: collector, message: dm, components: rows, timeout: timeout, return_object: {
-            schedule: null, roles: null, roster: null, content: null, title: null, description: null
-          }};
+          let interaction_object = {interaction: i, collector: collector, message: dm, components: rows, timeout: timeout, return_object: return_object};
           if(ids.includes(i.customId)){
             try{
                 switch(i.customId){
@@ -80,8 +80,19 @@ module.exports = {
             rows[0].components[0].setPlaceholder(selection);
             i.update({components: rows});
           } else if(i.customId === done_btn_id){
+            // Force complete information before a submission
             rows.forEach(row=>{row.components.forEach(component=>component.setDisabled(true))});
             i.update({components: rows});
+            db_object = db_util.LFM_DB(interaction_object.return_object);
+            console.log(interaction_object.return_object);
+            db_object.save(function(err){
+                console.log("Test")
+                if(err){
+                    console.log(err);
+                    return;
+                }
+
+        });
             collector.stop();
           }
       });

@@ -1,5 +1,5 @@
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
-const { token } = require('./config.json');
+const { token, database_connection } = require('./config.json');
 const fs = require('node:fs');
 const path = require('node:path');
 const mongoose = require('mongoose');
@@ -19,13 +19,15 @@ for (const file of commandFiles){
 }
 
 async function mongoose_connect(){
-    await mongoose.connect("");
+    mongoose.set('strictQuery',false)
+    await mongoose.connect(database_connection);
 };
 
 // When the client is ready, run this code (only once)
 client.once('ready', () => {
     // Tags.sync;
 	console.log('Ready!');
+    mongoose_connect();
 });
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;

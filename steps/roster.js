@@ -16,7 +16,10 @@ async function roster(interaction_object){
     let class_list = [
         {label: "REMOVE", description: "Remove this role from the list", value: "REMOVE"},
         
-        {label: "PLD", description: "Paladin", value: "PLD", emote: "<:Paladin:1058907219405590618>"},
+        {label: "PLD", description: "Paladin", value: "PLD", role:"TANK", emote: "<:Paladin:1058907219405590618>"},
+        {label: "WAR", description: "Warrior", value: "WAR", role:"TANK", emote: "<:Warrior:1058907231204151358>"},
+        {label: "DRK", description: "Dark Knight", value: "DRK", role:"TANK", emote: "<:DarkKnight:1058907194248138843>"},
+        {label: "GNB", description: "Gunbreaker", value: "GNB", role:"TANK", emote: "<:Gunbreaker:1058907206835241060>"},
         {label: "WHM", description: "White Mage", value: "WHM", emote: "<:WhiteMage:1058907297612582912>"},
         {label: "MNK", description: "Monk", value: "MNK", emote: "<:Monk:1058907415149551746>"},
         {label: "BRD", description: "Bard", value: "BRD", emote: "<:Bard:1058907343976402986>"},
@@ -90,7 +93,7 @@ async function roster(interaction_object){
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id) {
             interaction_object.components[1].components[2].setStyle(ButtonStyle.Success);
-            interaction_object.return_object.roles = return_list;
+            interaction_object.return_object.roster = return_list;
             await interaction_object.message.edit({components: interaction_object.components});
             await interaction_object.interaction.deleteReply();
         }

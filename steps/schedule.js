@@ -45,14 +45,14 @@ async function schedule(interaction_object){
         } else if(j.customId===modal_id) {
             modal_object = modal_utils.create_schedule_modal(j);
             await j.showModal(modal_object.modal);
-            const submitted = await j.awaitModalSubmit({time:timeout}); //Might be better to use a filter here
-            // Add some error handling here too
+            const submitted = await j.awaitModalSubmit({time:timeout});
             if(submitted && (submitted.customId === modal_object.modal_id)){
                 console.log("Schedule modal submitted");
 
                 rows[1].components[1].setDisabled(false);
                 time_block_lines = submitted.fields.getTextInputValue(modal_object.times_id).split('\n');
-
+                time_block_lines.forEach((time_block_element)=>time_block_element.replace(/\s/g,'')); //Removes all whitespace so validation is less strict.
+                // Also might want to put in something to clean the input to make sure there's no harmful text here
                 try{
                     await submitted.update({components: rows});
                 } catch (error) {
@@ -60,7 +60,6 @@ async function schedule(interaction_object){
                 }
             } 
         } else if(j.customId===done_id) {
-            // Check again here for valid lines because of the time zone change
             interaction_object.components[1].components[0].setStyle(ButtonStyle.Success);
             let valid_input = true;
             let valid_lines = [];
@@ -68,6 +67,7 @@ async function schedule(interaction_object){
             time_block_lines.forEach(currentValue=>{
                 let time_block = (time_block_parse.parse_timeblock(currentValue,time_zone));
                 if(time_block.valid===true){
+                    delete time_block.valid;
                     time_blocks.push(time_block);
                     valid_lines.push(currentValue);
                 } else {
