@@ -39,7 +39,7 @@ module.exports = {
             ids.push(currentValue.id);
         });
         rows.push(new ActionRowBuilder().addComponents(buttons.slice(0,5)));
-        rows.push(new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel("Done").setCustomId(done_btn_id).setStyle(ButtonStyle.Success)));
+        rows.push(new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel("Done").setCustomId(done_btn_id).setStyle(ButtonStyle.Success).setDisabled(true)));
       let dm = await interaction.user.send({content:"Get started by selecting a button", components: rows});
       filter=i=>{i.deferUpdate(); return true};
       const collector = dm.channel.createMessageComponentCollector({time: timeout}); //Consider adding idle arg

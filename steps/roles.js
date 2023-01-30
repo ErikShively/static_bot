@@ -90,8 +90,17 @@ async function roles(interaction_object){
 
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id){
-            interaction_object.components[1].components[1].setStyle(ButtonStyle.Success);
             interaction_object.return_object.roles = return_list;
+            let object_complete = true;
+            for([key,value] of Object.entries(interaction_object.return_object)){
+                if(value === null){
+                    object_complete = false;
+                }
+            }
+            if(object_complete===true){
+                interaction_object.components[2].components[0].setDisabled(false);
+            }
+            interaction_object.components[1].components[1].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components}); //To be called when the list is actually submitted
             await interaction_object.interaction.deleteReply();
         }

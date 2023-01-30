@@ -92,8 +92,17 @@ async function roster(interaction_object){
             return_list.forEach(element=>{list_string = list_string + class_list_key.get(element).emote});
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id) {
-            interaction_object.components[1].components[2].setStyle(ButtonStyle.Success);
             interaction_object.return_object.roster = return_list;
+            let object_complete = true;
+            for([key,value] of Object.entries(interaction_object.return_object)){
+                if(value === null){
+                    object_complete = false;
+                }
+            }
+            if(object_complete===true){
+                interaction_object.components[2].components[0].setDisabled(false);
+            }
+            interaction_object.components[1].components[2].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components});
             await interaction_object.interaction.deleteReply();
         }

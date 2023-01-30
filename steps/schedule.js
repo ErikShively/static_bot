@@ -76,15 +76,23 @@ async function schedule(interaction_object){
                 }
             });
             if(valid_input){
-                console.log(time_blocks);
+                interaction_object.return_object.schedule = time_blocks;
+                let object_complete = true;
+                for([key,value] of Object.entries(interaction_object.return_object)){
+                    if(value === null){
+                        object_complete = false;
+                    }
+                }
+                if(object_complete===true){
+                    interaction_object.components[2].components[0].setDisabled(false);
+                }
                 rows[1].components[0].setStyle(ButtonStyle.Secondary);
                 rows[1].components[1].setStyle(ButtonStyle.Success);
                 rows[1].components[1].setDisabled(false);
-                interaction_object.return_object.schedule = time_blocks;
                 rows.forEach(row=>{row.components.forEach(component=>component.setDisabled(true))});
                 await interaction_object.interaction.followUp({content: "Schedule set!", ephemeral: true});
                 await j.update({components: rows});
-                await interaction_object.message.edit({components: interaction_object.components}); //May need to remove await
+                await interaction_object.message.edit({components: interaction_object.components});
                 await interaction_object.interaction.deleteReply();
             } else {
                 console.log(valid_lines);
