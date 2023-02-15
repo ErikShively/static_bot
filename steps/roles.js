@@ -99,6 +99,7 @@ async function roles(interaction_object){
             }
             if(object_complete===true){
                 interaction_object.components[2].components[0].setDisabled(false);
+                interaction_object.components[2].components[0].setStyle(ButtonStyle.Primary);
             }
             interaction_object.components[1].components[1].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components}); //To be called when the list is actually submitted

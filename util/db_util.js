@@ -9,7 +9,8 @@ const lfm_schema = new mongoose.Schema({
     }],
     roles: [String],
     roster: [String],
-    content: [String]
+    content: [String],
+    lf: [String]
 });
 const LFM = mongoose.model('LFM', lfm_schema);
 const LFM_DB = (object)=>{return new LFM(object)};

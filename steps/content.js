@@ -44,6 +44,7 @@ async function content(interaction_object){
             }
             if(object_complete===true){
                 interaction_object.components[2].components[0].setDisabled(false);
+                interaction_object.components[2].components[0].setStyle(ButtonStyle.Primary);
             }
             rows[0].components[0].setPlaceholder(selection);
             await j.update({components: rows});

@@ -85,6 +85,7 @@ async function schedule(interaction_object){
                 }
                 if(object_complete===true){
                     interaction_object.components[2].components[0].setDisabled(false);
+                    interaction_object.components[2].components[0].setStyle(ButtonStyle.Primary);
                 }
                 rows[1].components[0].setStyle(ButtonStyle.Secondary);
                 rows[1].components[1].setStyle(ButtonStyle.Success);

@@ -16,6 +16,7 @@ async function title_description(interaction_object){
         }
         if(object_complete===true){
             interaction_object.components[2].components[0].setDisabled(false);
+            interaction_object.components[2].components[0].setStyle(ButtonStyle.Primary);
         }
         try{
             interaction_object.components[1].components[4].setStyle(ButtonStyle.Success);

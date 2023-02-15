@@ -19,7 +19,7 @@ module.exports = {
         let ids = [];
         let lf_select_id = "lf_select" + timestamp + interaction.user.id;
         let done_btn_id = "lf_setup_done" + timestamp + interaction.user.id;
-        let return_object = {schedule: null, roles: null, roster: null, content: null, title: null, description: null}
+        let return_object = {schedule: null, roles: null, roster: null, content: null, title: null, description: null, lf: null, user: interaction.user.id}
         rows.push(new ActionRowBuilder().addComponents(new SelectMenuBuilder()
         .setPlaceholder("Looking For Group or Members")
         .setCustomId(lf_select_id)
@@ -35,11 +35,11 @@ module.exports = {
             {style:ButtonStyle.Primary,id:"title_description" + timestamp + interaction.user.id,label:"Title/Description",reply:""},
         ];
         steps.forEach(currentValue=>{
-            buttons.push(new ButtonBuilder().setCustomId(currentValue.id).setLabel(currentValue.label).setStyle(currentValue.style));
+            buttons.push(new ButtonBuilder().setCustomId(currentValue.id).setLabel(currentValue.label).setStyle(currentValue.style).setDisabled(true));
             ids.push(currentValue.id);
         });
         rows.push(new ActionRowBuilder().addComponents(buttons.slice(0,5)));
-        rows.push(new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel("Done").setCustomId(done_btn_id).setStyle(ButtonStyle.Success).setDisabled(true)));
+        rows.push(new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel("Done").setCustomId(done_btn_id).setStyle(ButtonStyle.Secondary).setDisabled(true)));
       let dm = await interaction.user.send({content:"Get started by selecting a button", components: rows});
       filter=i=>{i.deferUpdate(); return true};
       const collector = dm.channel.createMessageComponentCollector({time: timeout}); //Consider adding idle arg
@@ -71,12 +71,14 @@ module.exports = {
                 collector.stop();
             }
           } else if(i.customId === lf_select_id){
+            rows[1].components.forEach(component=>component.setDisabled(false));
             let selection = i.values[0];
             if(selection ==="LFG"){
                 rows[1].components[1].setDisabled(true);
             } else {
                 rows[1].components[1].setDisabled(false);
             }
+            interaction_object.return_object.lf = selection;
             rows[0].components[0].setPlaceholder(selection);
             i.update({components: rows});
           } else if(i.customId === done_btn_id){

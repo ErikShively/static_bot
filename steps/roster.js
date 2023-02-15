@@ -20,12 +20,12 @@ async function roster(interaction_object){
         {label: "WAR", description: "Warrior", value: "WAR", role:"TANK", emote: "<:Warrior:1058907231204151358>"},
         {label: "DRK", description: "Dark Knight", value: "DRK", role:"TANK", emote: "<:DarkKnight:1058907194248138843>"},
         {label: "GNB", description: "Gunbreaker", value: "GNB", role:"TANK", emote: "<:Gunbreaker:1058907206835241060>"},
-        {label: "WHM", description: "White Mage", value: "WHM", emote: "<:WhiteMage:1058907297612582912>"},
-        {label: "MNK", description: "Monk", value: "MNK", emote: "<:Monk:1058907415149551746>"},
-        {label: "BRD", description: "Bard", value: "BRD", emote: "<:Bard:1058907343976402986>"},
-        {label: "SMN", description: "Summoner", value: "SMN", emote: "<:Summoner:1058907490990956594>"}];
+        {label: "WHM", description: "White Mage", value: "WHM", role:"HEAL", emote: "<:WhiteMage:1058907297612582912>"},
+        {label: "MNK", description: "Monk", value: "MNK", role:"MDPS", emote: "<:Monk:1058907415149551746>"},
+        {label: "BRD", description: "Bard", value: "BRD", role:"RDPS", emote: "<:Bard:1058907343976402986>"},
+        {label: "SMN", description: "Summoner", value: "SMN", role:"CDPS", emote: "<:Summoner:1058907490990956594>"}];
 
-    class_list.forEach(element=>{class_list_key.set(element.value, {label: element.label, description: element.description, emote: element.emote})});
+    class_list.forEach(element=>{class_list_key.set(element.value, {label: element.label, description: element.description, role:element.role, emote: element.emote})});
     class_list_key.set("UNST", {emote:":black_square_button:"});
 
     rows.push(new ActionRowBuilder().addComponents(
@@ -92,6 +92,13 @@ async function roster(interaction_object){
             return_list.forEach(element=>{list_string = list_string + class_list_key.get(element).emote});
             await j.update({content: list_string, components: rows});
         } else if(j.customId === done_btn_id) {
+            let LF = interaction_object.return_object.lf;
+            if(LF=="LFG"){
+                let role_list = [];
+                return_list.forEach((entry)=>{role_list.push(class_list_key.get(entry).role)})
+                interaction_object.return_object.roles=role_list;
+                interaction_object.components[1].components[1].setStyle(ButtonStyle.Success);
+            }
             interaction_object.return_object.roster = return_list;
             let object_complete = true;
             for([key,value] of Object.entries(interaction_object.return_object)){
@@ -101,6 +108,7 @@ async function roster(interaction_object){
             }
             if(object_complete===true){
                 interaction_object.components[2].components[0].setDisabled(false);
+                interaction_object.components[2].components[0].setStyle(ButtonStyle.Primary);
             }
             interaction_object.components[1].components[2].setStyle(ButtonStyle.Success);
             await interaction_object.message.edit({components: interaction_object.components});
